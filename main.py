@@ -42,7 +42,6 @@ def process_image(filename):
     # Now calculate theta
     angle = math.atan2(top_most[1] - left_most[1], top_most[0] - left_most[0])
 
-    # TODO: experiment with moment
     rows, cols, _ = img.shape
     mat = cv2.getRotationMatrix2D(((cols - 1.0) / 2.0, (rows - 1.0) / 2.0), math.degrees(angle) - 90, 1.1)
     img = cv2.warpAffine(img, mat, (cols, rows))
@@ -55,8 +54,6 @@ def process_image(filename):
     #   Detect region to inpaint
     mask = 255 - grayscale_rotated 
 
-    cv2.imwrite(f"./contoured/{filename}", mask)
-
     # Actually perform inpainting
     img = cv2.inpaint(img, mask, 9, cv2.INPAINT_TELEA)
 
@@ -64,10 +61,10 @@ def process_image(filename):
     img = cv2.fastNlMeansDenoisingColored(img, hColor=10.0, templateWindowSize=7, searchWindowSize=21)
 
     # CLAHE (fancy histogram equalisation)
-    img = cv2.cvtColor(img, cv2.COLOR_BGR2YCrCb)
+    img = cv2.cvtColor(img, cv2.COLOR_BGR2Lab)
     clahe = cv2.createCLAHE(clipLimit=2.0, tileGridSize=(8,8))
     img[0,:,:] = clahe.apply(img[0,:,:])
-    img = cv2.cvtColor(img, cv2.COLOR_YCrCb2BGR)
+    img = cv2.cvtColor(img, cv2.COLOR_Lab2BGR)
 
     cv2.imwrite(f"./Results/{filename}", img)
 
