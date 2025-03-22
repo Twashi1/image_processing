@@ -76,6 +76,8 @@ if ".DS_Store" in names:
 # keeping track of the number of correct predictions for accuracy:
 correct = 0
 
+_ADDED_misclassified = []
+
 # main loop:
 for filename in names:
 
@@ -94,12 +96,17 @@ for filename in names:
             print(f'{filename}: snow')
             if(filename.startswith(tuple(snows))):
                 correct += 1
+            else:
+                _ADDED_misclassified.append(filename)
         else:
             print(f'{filename}: rain')
             if(filename.startswith(tuple(rains))):
                 correct += 1
+            else:
+                _ADDED_misclassified.append(filename)
 
 # print final accuracy:
 print(f'Accuracy is {correct/len(names)}')
+print(_ADDED_misclassified)
 
 # ===================================================================
